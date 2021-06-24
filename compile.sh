@@ -7,3 +7,4 @@ WASMARGS="$ARGS -Wl,--demangle -Wl,--export-all"
 
 # Compile into webassembly
 clang --target=wasm32-unknown-wasi --sysroot $SYSROOT $WASMARGS $SRC -o $SRC.wasm
+wasm2wat $SRC.wasm --output=$SRC.wat
