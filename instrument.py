@@ -9,7 +9,7 @@ from pycparser import parse_file, c_generator, c_parser, c_ast, plyparser
 class AssignmentVisitor(c_ast.NodeVisitor):
     to_add = set()
     def add(self, var, coord):
-        self.to_add.add(c_ast.FuncCall(c_ast.ID('printf'), c_ast.ExprList([c_ast.Constant(type='string', value='"\\nORBS:%d\\n"'), c_ast.ID(var)]), plyparser.Coord(file='', line=coord.line)))
+        self.to_add.add(c_ast.FuncCall(c_ast.ID('printf'), c_ast.ExprList([c_ast.Constant(type='string', value='"\\nORBS:%x\\n"'), c_ast.ID(var)]), plyparser.Coord(file='', line=coord.line)))
     def visit_Assignment(self, node):
         self.add(node.lvalue.name, node.coord)
     def visit_UnaryOp(self, node):
