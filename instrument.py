@@ -30,11 +30,11 @@ class Generator(c_generator.CGenerator):
                     node.stmt.block_items.insert(0, self.to_add)
                 else:
                     node.stmt = c_ast.Compound([self.to_add, node.stmt])
-                return super().visit(node)
+                return super(Generator, self).visit(node)
             else:
-                return '%s;\n%s%s' % (super().visit(node), self._make_indent(), self.visit(self.to_add))
+                return '%s;\n%s%s' % (super(Generator, self).visit(node), self._make_indent(), self.visit(self.to_add))
         else:
-            return super().visit(node)
+            return super(Generator, self).visit(node)
 
 def translate_to_c(ast, to_add):
     copy_ast = copy.deepcopy(ast)
