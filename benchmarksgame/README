@@ -1,0 +1,4 @@
+Source files have been extracted from here: https://benchmarksgame-team.pages.debian.net/benchmarksgame/index.html
+Only programs that can be compiled to WebAssembly with the compile.sh script have been kept.
+The other files are in the unsupported/ directory.
+Note that some sources are missing in the above link: it can be that foo1.c and foo3.c are present, but not foo2.c
