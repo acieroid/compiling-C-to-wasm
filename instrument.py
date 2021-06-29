@@ -8,10 +8,21 @@ from pycparser import parse_file, c_generator, c_parser, c_ast, plyparser
 
 class AssignmentVisitor(c_ast.NodeVisitor):
     to_add = set()
+    types = {}
     def add(self, var, coord):
-        self.to_add.add(c_ast.FuncCall(c_ast.ID('printf'), c_ast.ExprList([c_ast.Constant(type='string', value='"\\nORBS:%x\\n"'), c_ast.ID(var)]), plyparser.Coord(file='', line=coord.line)))
+        s = ''
+        if var in self.types and self.types[var] == 'string':
+            s = '"\\nORBS:%s\\n"'
+        else:
+            s = '"\\nORBS:%x\\n"'
+        self.to_add.add(c_ast.FuncCall(c_ast.ID('printf'), c_ast.ExprList([c_ast.Constant(type='string', value=s), c_ast.ID(var)]), plyparser.Coord(file='', line=coord.line)))
     def visit_Assignment(self, node):
         self.add(node.lvalue.name, node.coord)
+    def visit_Decl(self, node):
+        if isinstance(node.type, c_ast.PtrDecl) and isinstance(node.type.type, c_ast.TypeDecl) and isinstance(node.type.type.type, c_ast.IdentifierType) and 'char' in node.type.type.type.names:
+            # char*
+            self.types[node.name] = 'string'
+        # Other types are not stored in self.types, as we will simply print their hex value
     def visit_UnaryOp(self, node):
         if node.op == 'p++' or node.op == 'p--':
             self.add(node.expr.name, node.coord)
@@ -46,6 +57,7 @@ def translate_to_c(filename, ast, to_add):
     generator = Generator(to_add)
     transformed_source = generator.visit(copy_ast)
     instrumented_filename = '%s_%s_%d_%s.c' % (filename[:-2], to_add.args.exprs[1].name, to_add.coord.line, generator.added_type)
+    print(instrumented_filename)
     f = open(instrumented_filename, 'w')
     f.write(transformed_source)
     f.close()
