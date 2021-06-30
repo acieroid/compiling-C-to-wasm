@@ -56,7 +56,8 @@ int main()
      else
      {a = 30; b = 30;} */
   answer = complex(a, b);
-  return answer;
+  printf("result: %d\n", answer);
+  return 0;
 }
 
 

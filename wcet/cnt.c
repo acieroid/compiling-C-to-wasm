@@ -32,7 +32,7 @@ int main (void)
    /* printf("\n   *** MATRIX SUM AND COUNT BENCHMARK TEST ***\n\n"); */
    /* printf("RESULTS OF THE TEST:\n"); */
    Test(Array);
-   return 1;
+   return 0;
 }
 
 

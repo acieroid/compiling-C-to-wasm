@@ -68,7 +68,8 @@ int main()
 
   a = 30;
   fib(a);
-  return a;
+  printf("result: %d\n", a);
+  return 0;
 }
 
 

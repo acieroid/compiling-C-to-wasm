@@ -241,8 +241,8 @@ int main()
 	cnt=swi50(cnt);
 	cnt=swi120(cnt);
 
-	/* printf("cnt: %d\n", cnt); */
+	printf("cnt: %d\n", cnt);
 
-	return cnt;
+	return 0;
 
 }

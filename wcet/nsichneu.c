@@ -4240,7 +4240,8 @@ int main()
 
    dummy_i = 77;
 
-   return dummy_i;
+   printf("result: %d\n", dummy_i);
+   return 0;
 
 
 }

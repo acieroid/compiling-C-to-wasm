@@ -242,5 +242,6 @@ int main(void)
     for(i=0;i<64;i+=2) printf("block[%2d] -> %8d . block[%2d] -> %8d\n",i,block[i],i+1,block[i+1]);
   #endif
   
-  return block[0];
+  printf("result: %d\n", block[0]);
+  return 0;
 }

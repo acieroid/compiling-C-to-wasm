@@ -22,6 +22,7 @@ int main (void)
   for (i = 0;  i <= n; i++)
       s += fac (i);
 
-  return (s);
+  printf("result: %d\n", s);
+  return 0;
 }
 

@@ -910,6 +910,7 @@ printf("\n%4d %4d %4d %4d %4d",j,compressed[i/2] >> 6,compressed[i/2] & 63,resul
         i,compressed[i] >> 6,compressed[i] & 63);
 */
 
-	return result[i] + result[i + 1];
+	printf("result: %d\n", result[i] + result[i + 1]);
+        return 0;
 }
 #endif

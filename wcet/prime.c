@@ -41,6 +41,7 @@ int main () {
   uint x =  21649;
   uint y = 513239;
   swap (&x, &y);
-  return (!(prime(x) && prime(y)));
+  printf("result: %d\n", (!(prime(x) && prime(y))));
+  return 0;
 }
 
