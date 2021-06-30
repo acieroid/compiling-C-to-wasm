@@ -17,6 +17,12 @@ class AssignmentVisitor(c_ast.NodeVisitor):
             s = '"\\nORBS:%x\\n"'
         self.to_add.add(c_ast.FuncCall(c_ast.ID('printf'), c_ast.ExprList([c_ast.Constant(type='string', value=s), c_ast.ID(var)]), plyparser.Coord(file='', line=coord.line)))
     def visit_Assignment(self, node):
+        if isinstance(node.lvalue, c_ast.UnaryOp) and node.lvalue.op == '*':
+            # *a = ..., we don't treat this as a slicing criterion (as the value of a does not change)
+            return
+        if isinstance(node.lvalue, c_ast.ArrayRef):
+            # a[x] = ..., currently ignored
+            return
         self.add(node.lvalue.name, node.coord)
     def visit_Decl(self, node):
         if isinstance(node.type, c_ast.PtrDecl) and isinstance(node.type.type, c_ast.TypeDecl) and isinstance(node.type.type.type, c_ast.IdentifierType) and 'char' in node.type.type.type.names:
