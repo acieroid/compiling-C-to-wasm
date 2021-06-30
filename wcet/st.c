@@ -13,9 +13,9 @@
  *  - Changed return type of InitSeed from 'missing (default int)' to 'void'
  */
 
-#include <sys/types.h>
-#include <sys/times.h>
-#include <math.h>
+/* #include <sys/types.h> */
+/* #include <sys/times.h> */
+/* #include <math.h> */
 
 
 #define MAX 1000

@@ -23,6 +23,9 @@ class AssignmentVisitor(c_ast.NodeVisitor):
         if isinstance(node.lvalue, c_ast.ArrayRef):
             # a[x] = ..., currently ignored
             return
+        if isinstance(node.lvalue, c_ast.StructRef):
+            # a.x = ..., currently ignored
+            return
         self.add(node.lvalue.name, node.coord)
     def visit_Decl(self, node):
         if isinstance(node.type, c_ast.PtrDecl) and isinstance(node.type.type, c_ast.TypeDecl) and isinstance(node.type.type.type, c_ast.IdentifierType) and 'char' in node.type.type.type.names:
@@ -35,6 +38,7 @@ class AssignmentVisitor(c_ast.NodeVisitor):
 
 class Generator(c_generator.CGenerator):
     def __init__(self, to_add):
+        super(Generator, self).__init__()
         self.to_add = to_add
         self.added = False
         self.added_type = 'expr'
