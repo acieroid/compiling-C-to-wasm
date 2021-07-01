@@ -4,8 +4,14 @@
  * contributed by Bob W 
  */
 
+/*
 #include <stdio.h>
 #include <stdlib.h>
+*/
+#define stdin 0
+#define stdout 1
+#define stderr 2
+typedef unsigned int size_t;
 
 #define JBFSIZE 82      // line input buffer size
 #define QBFSIZE 5200     // output buffer initial size

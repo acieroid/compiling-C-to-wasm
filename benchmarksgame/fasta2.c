@@ -21,14 +21,19 @@
 
 #define THREADS_TO_USE 4
 
-#include <stdint.h>
+/*#include <stdint.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h>*/
 
 #ifdef _OPENMP
 #include <omp.h>
 #endif
+
+typedef int intptr_t;
+typedef unsigned int uint32_t;
+#define stdout 1
+#define NULL 0
 
 // intptr_t should be the native integer type on most sane systems.
 typedef intptr_t intnative_t;

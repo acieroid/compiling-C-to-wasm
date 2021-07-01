@@ -6,10 +6,15 @@
 // This controls the width of lines that are output by this program.
 #define MAXIMUM_LINE_WIDTH   60
 
-#include <stdint.h>
+/*#include <stdint.h>
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h>*/
+
+typedef int intptr_t;
+typedef unsigned int uint32_t;
+#define NULL 0
+#define stdout 1
 
 // intptr_t should be the native integer type on most sane systems.
 typedef intptr_t intnative_t;

@@ -43,11 +43,15 @@
  * by Drake Diedrich
  */
 
+/*
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+*/
+#define stdout 1
+typedef unsigned int uint32_t;
 
 #define IM 139968
 #define IA   3877

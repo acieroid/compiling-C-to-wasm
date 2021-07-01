@@ -10,7 +10,8 @@
    compile flags:  -O3 -ffast-math -march=pentium4 -funroll-loops
 */
 
-#include<stdio.h>
+/* #include<stdio.h>*/
+#define stdout 1
 
 int main (int argc, char **argv)
 {

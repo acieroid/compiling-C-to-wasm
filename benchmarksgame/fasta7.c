@@ -19,10 +19,17 @@
 
 #define THREADS_TO_USE 4
 
+/*
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+*/
+
+typedef int intptr_t;
+typedef unsigned int uint32_t;
+#define NULL 0
+#define stdout 1
 
 #ifdef _OPENMP
 #include <omp.h>

@@ -11,11 +11,12 @@
  * by Drake Diedrich
  */
 
-#include <stdint.h>
+/*#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <string.h>*/
 
+typedef unsigned int uint32_t;
 #define IM 139968
 #define IA   3877
 #define IC  29573

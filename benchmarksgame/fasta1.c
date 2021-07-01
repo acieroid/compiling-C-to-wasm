@@ -4,8 +4,8 @@
  * by Paul Hsieh
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+/*#include <stdio.h>
+#include <stdlib.h>*/
 
 #define IM 139968
 #define IA   3877

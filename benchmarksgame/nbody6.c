@@ -6,9 +6,11 @@
  *  
  */
 
+/*
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+*/
 
 #define pi 3.141592653589793
 #define solar_mass (4 * pi * pi)

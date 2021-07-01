@@ -14,10 +14,16 @@
 // initial sequence_Capacity.
 #define READ_SIZE 16384
 
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+*/
+typedef int intptr_t;
+#define stdin 0
+#define stdout 1
+#define stderr 2
 
 // intptr_t should be the native integer type on most sane systems.
 typedef intptr_t intnative_t;

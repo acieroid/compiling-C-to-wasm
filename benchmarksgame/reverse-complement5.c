@@ -6,12 +6,17 @@
 */
 
 #define _GNU_SOURCE
-#include <sched.h>
+/*#include <sched.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <unistd.h>
 #include <string.h>
+*/
+#define stdin 0
+#define stdout 1
+#define stderr 2
+typedef unsigned int size_t;
 
 char *pairs = "ATCGGCTAUAMKRYWWSSYRKMVBHDDHBVNN\n\n";
 char tbl[128];

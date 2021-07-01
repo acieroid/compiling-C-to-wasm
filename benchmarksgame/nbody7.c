@@ -3,9 +3,11 @@
 //
 // contributed by Shakhno DV, Shakhno AV
 
+/*
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+*/
 
 
 #define pi 3.141592653589793

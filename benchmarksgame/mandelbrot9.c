@@ -9,9 +9,14 @@
 // This controls the maximum amount of iterations that are done for each pixel.
 #define MAXIMUM_ITERATIONS   50
 
+/*
 #include <stdint.h>
 #include <stdlib.h>
-#include <stdio.h>
+#include <stdio.h>*/
+typedef int intptr_t;
+typedef long intmax_t;
+typedef unsigned char uint8_t;
+#define stdout 1
 
 // intptr_t should be the native integer type on most sane systems.
 typedef intptr_t intnative_t;
