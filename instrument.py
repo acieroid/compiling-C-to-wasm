@@ -57,10 +57,47 @@ class Generator(c_generator.CGenerator):
                     node.stmt = c_ast.Compound([self.to_add, node.stmt])
                 self.added_type = 'for'
                 return super(Generator, self).visit(node)
+            elif isinstance(node, c_ast.Case):
+                node.stmts.insert(0, self.to_add)
+                self.added_type = 'case'
+                return super(Generator, self).visit(node)
+            elif isinstance(node, c_ast.If):
+                if node.iftrue.block_items == None:
+                    node.iftrue.block_items = [self.to_add]
+                else:
+                    node.iftrue.block_items.insert(0, self.to_add)
+                if node.iffalse.block_items == None:
+                    node.iffalse.block_items = [self.to_add]
+                else:
+                    node.iffalse.block_items.insert(0, self.to_add)
+                self.added_type = 'if'
+                return super(Generator, self).visit(node)
             else:
                 return '%s;\n%s%s' % (super(Generator, self).visit(node), self._make_indent(), self.visit(self.to_add))
         else:
             return super(Generator, self).visit(node)
+
+class Preprocessor(c_generator.CGenerator):
+    """Preprocesses the C source code.
+        - Remove uses of if without braces
+        - Will nicely avoid multiple statements on the same line
+    """
+    def __init__(self):
+        super(Preprocessor, self).__init__()
+    def visit(self, node):
+        if isinstance(node, c_ast.If) and not isinstance(node.iftrue, c_ast.Compound):
+            node.iftrue = c_ast.Compound([node.iftrue])
+        if isinstance(node, c_ast.If) and not isinstance(node.iffalse, c_ast.Compound):
+            node.iffalse = c_ast.Compound([node.iffalse])
+        return super(Preprocessor, self).visit(node)
+
+preprocessor = Preprocessor()
+def preprocess(filename):
+    ast = parse_file(filename, use_cpp=True)
+    preprocessed = preprocessor.visit(ast)
+    f = open(filename + '.preprocessed', 'w')
+    f.write(preprocessed)
+    f.close()
 
 def translate_to_c(filename, ast, to_add):
     copy_ast = copy.deepcopy(ast)
@@ -76,7 +113,8 @@ def translate_to_c(filename, ast, to_add):
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
-        ast = parse_file(filename, use_cpp=True)
+        preprocess(filename)
+        ast = parse_file(filename + '.preprocessed', use_cpp=True)
         v = AssignmentVisitor()
         v.visit(ast)
         for to_add in v.to_add:
