@@ -1,20 +1,5 @@
-// The Computer Language Benchmarks Game
-// https://salsa.debian.org/benchmarksgame-team/benchmarksgame/
-//
-// contributed by Jeremy Zerfas
-// rewritten by Аноним Легионов, inspired by fasta Rust #2 program
-// use two OpenMP locks instead of one critical section
-// decouples IO activity from random number generation
-//
-// modified by Josh Goldfoot, adding use of a buffer for fasta_repeat
-
-
-// This controls the width of lines that are output by this program.
 #define MAXIMUM_LINE_WIDTH	60
 
-// This program will generate the random nucleotide sequences in parallel which
-// are worked on in blocks of lines. The number of lines in those blocks is
-// controlled by this setting.
 #define LINES_PER_BLOCK 1024
 
 #define CHARACTERS_PER_BLOCK (MAXIMUM_LINE_WIDTH*LINES_PER_BLOCK)
@@ -32,6 +17,7 @@
 
 typedef int intptr_t;
 typedef unsigned int uint32_t;
+extern void *stdout;
 #define stdout 1
 #define NULL 0
 

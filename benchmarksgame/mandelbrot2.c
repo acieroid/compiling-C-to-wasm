@@ -11,7 +11,8 @@
 */
 
 /* #include<stdio.h>*/
-#define stdout 1
+extern void *stdout;
+#define stdout stdout
 
 int main (int argc, char **argv)
 {

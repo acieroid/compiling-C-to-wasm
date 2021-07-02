@@ -13,9 +13,12 @@
 #include <unistd.h>
 #include <string.h>
 */
-#define stdin 0
-#define stdout 1
-#define stderr 2
+extern void *stdin;
+extern void *stdout;
+extern void *stderr;
+#define stdin stdin
+#define stdout stdout
+#define stderr stderr
 typedef unsigned int size_t;
 
 char *pairs = "ATCGGCTAUAMKRYWWSSYRKMVBHDDHBVNN\n\n";

@@ -16,8 +16,6 @@ long int expint(int n, long int x);
 int main(void)
 {
   expint(50,1);
-  // with  expint(50,21) as argument, runs the short path
-  // in expint.   expint(50,1)  gives the longest execution time
   return 0;
 }
 
@@ -60,8 +58,6 @@ long int expint(int n, long int x)
     }
   else                          /* or this leg? */
     {
-      // For the current argument, will always take
-      // '2' path here:
       ans = nm1 != 0 ? 2 : 1000;
       fact=1;
       for (i=1;i<=100;i++)      /* MAXIT */

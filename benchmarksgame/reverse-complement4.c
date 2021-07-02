@@ -8,69 +8,72 @@
 #include <stdio.h>
 #include <stdlib.h>
 */
-#define stdin 0
-#define stdout 1
-#define stderr 2
+extern void *stdin;
+extern void *stdout;
+extern void *stderr;
+#define stdin stdin
+#define stdout stdout
+#define stderr stderr
 typedef unsigned int size_t;
 
-#define JBFSIZE 82      // line input buffer size
-#define QBFSIZE 5200     // output buffer initial size
+#define JBFSIZE 82
+#define QBFSIZE 5200
 #define Z16     "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
 #define V32     "\0TVGH\0\0CD\0\0M\0KN\0\0\0YSA\0BW\0R\0\0\0\0\0\0"
 #define VALL    Z16 Z16 Z16 Z16 V32 V32 Z16 Z16 Z16 Z16 Z16 Z16 Z16 Z16
 
-int errex(char *s, int n) {      // error message+value, return 1
+int errex(char *s, int n) {
   fprintf(stderr,"\n*** Error: %s [%d]!\n", s, n);
   return 1;
 }
 
-int main () {                    // ***** main *****
-  char *pj, *pq, *pr;            // buffer pointers: inp,out,/out
-  char *jjj = malloc(JBFSIZE);   // allocate input line buffer
-  char *qqq = malloc(QBFSIZE);   // output buffer (dyn. size)
-  char *pqstop = qqq+QBFSIZE;    // end-of-buffer pointer
-  char xtab[256] = VALL;         // char conversion table
+int main () {                    
+  char *pj, *pq, *pr;            
+  char *jjj = malloc(JBFSIZE);   
+  char *qqq = malloc(QBFSIZE);   
+  char *pqstop = qqq+QBFSIZE;    
+  char xtab[256] = VALL;         
 
   if (!jjj || !qqq)
     return errex("Buffer allocation", !jjj + !qqq);
-  pj = fgets(jjj,JBFSIZE,stdin);         // fetch 1st line
+  pj = fgets(jjj,JBFSIZE,stdin);         
   if (!pj)
     return errex("No input data",0);
   if (*jjj != '>')
     return errex("1st char not '>'", 0);
 
-  while (pj) {                           // MAIN LOOP: process data
-    fputs(jjj, stdout);                  // output ID line
+  while (pj) {                           
+    fputs(jjj, stdout);                  
 
-    for (pq=qqq+1, pr=pqstop; ; pq++) {  // LOOP: fill output buffer
-      pj = fgets(jjj, JBFSIZE, stdin);   // get line from stdin
-      if (!pj || (*jjj=='>'))  break;    // EOF or new ID line
-      if (pr <= (pq+61)) {               // need to resize buffer
+    for (pq=qqq+1, pr=pqstop; ; pq++) {  
+      pj = fgets(jjj, JBFSIZE, stdin);   
+      if (!pj || (*jjj=='>'))  break;    
+      if (pr <= (pq+61)) {               
         char *newstop = pqstop + 12777888;
         char *newptr  = realloc(qqq, newstop-qqq);
         if (!newptr)
           return errex("Out of memory", 0);
-        if (newptr != qqq) {             // new base: adj. pointers
-          size_t x = newptr-qqq;         // offset for pointer update
+        if (newptr != qqq) {             
+          size_t x = newptr-qqq;        
           pq+=x;  pr+=x;  qqq+=x;
           newstop+=x;  pqstop+=x;
         }
         pr = __builtin_memmove(newstop-(pqstop-pr), pr, pqstop-pr);
-        pqstop = newstop;                // buffer resize complete
+        pqstop = newstop;                
       }
-      while (*pj) {                      // LOOP: conv. & revert line
+      while (*pj) {                      
         char c = xtab[(unsigned char)(*pj++)];
-        if (c)                           // conversion valid
+        if (c)                           
           *(--pr) = c;
       }
     }
 
-    for (pq = qqq; pr<pqstop; ) {        // LOOP: format output
+    for (pq = qqq; pr<pqstop; ) {        
       size_t x = (pqstop-pr)<60 ? pqstop-pr : 60;
-      __builtin_memmove(pq,pr,x);        // move line to free space
-      pr+=x;  pq+=x;  *(pq++) = 0xA;     // adjust pointers, add LF
+      __builtin_memmove(pq,pr,x);        
+      pr+=x;  pq+=x;  *(pq++) = 0xA;     
     }
-    fwrite(qqq, 1, pq-qqq, stdout);      // output converted data
+    fwrite(qqq, 1, pq-qqq, stdout);      
   }
   return 0;
 }

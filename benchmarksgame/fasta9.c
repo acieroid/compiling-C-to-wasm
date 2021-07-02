@@ -50,7 +50,8 @@
 #include <string.h>
 #include <unistd.h>
 */
-#define stdout 1
+extern void *stdout;
+#define stdout stdout
 typedef unsigned int uint32_t;
 
 #define IM 139968
@@ -157,7 +158,8 @@ static char * build_hash(const char *symb,const float *probability) {
 static char * buffer_with_linebreaks(const int lines) {
   char *buffer = malloc((LINELEN+1)*lines);
   if (!buffer) exit(-1);
-  for (int i=0; i<lines; i++) buffer[i*(LINELEN+1)+LINELEN] = '\n';
+  int i;
+  for (i=0; i<lines; i++) buffer[i*(LINELEN+1)+LINELEN] = '\n';
   return buffer;
 }
 

@@ -22,7 +22,8 @@
 #include <string.h>*/
 
 typedef unsigned int uint32_t;
-#define stdout 1
+extern void *stdout;
+#define stdout stdout
 
 #define IM 139968
 #define IA   3877
@@ -105,7 +106,8 @@ static void repeat_fasta(const char *seq,
  */
 static int linear_lookup(const int len, const double *p, const double v) {
   int i = 0;
-  for (int j=0; j<len-1; j++) if (v > p[j]) i++;
+  int j;
+  for (j=0; j<len-1; j++) if (v > p[j]) i++;
   return i;
 }
 

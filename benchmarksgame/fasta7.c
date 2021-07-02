@@ -1,18 +1,5 @@
-// The Computer Language Benchmarks Game
-// https://salsa.debian.org/benchmarksgame-team/benchmarksgame/
-//
-// contributed by Jeremy Zerfas
-// rewritten by Аноним Легионов, inspired by fasta Rust #2 program
-// use two OpenMP locks instead of one critical section
-// decouples IO activity from random number generation
-
-
-// This controls the width of lines that are output by this program.
 #define MAXIMUM_LINE_WIDTH	60
 
-// This program will generate the random nucleotide sequences in parallel which
-// are worked on in blocks of lines. The number of lines in those blocks is
-// controlled by this setting.
 #define LINES_PER_BLOCK 1024
 
 #define CHARACTERS_PER_BLOCK (MAXIMUM_LINE_WIDTH*LINES_PER_BLOCK)
@@ -29,13 +16,13 @@
 typedef int intptr_t;
 typedef unsigned int uint32_t;
 #define NULL 0
-#define stdout 1
+extern void *stdout;
+#define stdout stdout
 
 #ifdef _OPENMP
 #include <omp.h>
 #endif
 
-// intptr_t should be the native integer type on most sane systems.
 typedef intptr_t intnative_t;
 
 typedef struct
@@ -45,21 +32,14 @@ typedef struct
 } nucleotide_info;
 
 
-// Repeatedly print string_To_Repeat until it has printed
-// number_Of_Characters_To_Create. The output is also wrapped to
-// MAXIMUM_LINE_WIDTH columns.
 static void repeat_And_Wrap_String(const char string_To_Repeat[],
                                    const intnative_t number_Of_Characters_To_Create)
 {
     const intnative_t string_To_Repeat_Length=strlen(string_To_Repeat);
 
-    // Create an extended_String_To_Repeat which is a copy of string_To_Repeat
-    // but extended with another copy of the first MAXIMUM_LINE_WIDTH characters
-    // of string_To_Repeat appended to the end. Later on this allows us to
-    // generate a line of output just by doing simple memory copies using an
-    // appropriate offset into extended_String_To_Repeat.
     char extended_String_To_Repeat[string_To_Repeat_Length+MAXIMUM_LINE_WIDTH];
-    for(intnative_t column=0; column<string_To_Repeat_Length+MAXIMUM_LINE_WIDTH;
+    intnative_t column;
+    for(column=0; column<string_To_Repeat_Length+MAXIMUM_LINE_WIDTH;
             column++)
         extended_String_To_Repeat[column]=
             string_To_Repeat[column%string_To_Repeat_Length];
@@ -68,13 +48,11 @@ static void repeat_And_Wrap_String(const char string_To_Repeat[],
     char line[MAXIMUM_LINE_WIDTH+1];
     line[MAXIMUM_LINE_WIDTH]='\n';
 
-    for(intnative_t current_Number_Of_Characters_To_Create=
+    intnative_t current_Number_Of_Characters_To_Create;
+    for(current_Number_Of_Characters_To_Create=
                 number_Of_Characters_To_Create;
             current_Number_Of_Characters_To_Create>0;)
     {
-        // Figure out the length of the line we need to write. If it's less than
-        // MAXIMUM_LINE_WIDTH then we also need to add a line feed in the right
-        // spot too.
         intnative_t line_Length=MAXIMUM_LINE_WIDTH;
         if(current_Number_Of_Characters_To_Create<MAXIMUM_LINE_WIDTH)
         {
@@ -84,29 +62,23 @@ static void repeat_And_Wrap_String(const char string_To_Repeat[],
 
         memcpy(line, extended_String_To_Repeat+offset, line_Length);
 
-        // Update the offset, reducing it by string_To_Repeat_Length if
-        // necessary.
         offset+=line_Length;
         if(offset>string_To_Repeat_Length)
             offset-=string_To_Repeat_Length;
 
-        // Output the line to stdout and update the
-        // current_Number_Of_Characters_To_Create.
         fwrite(line, line_Length+1, 1, stdout);
         current_Number_Of_Characters_To_Create-=line_Length;
     }
 }
 
 
-// Generate a pseudorandom number from 0 to max using a linear
-// congruential generator.
 #define IM		139968
 #define IA		3877
 #define IC		29573
 uint32_t seed=42;
 
-int rng_tid; //Thread ID
-int rng_tnum = 1; //Thread number
+int rng_tid;
+int rng_tnum = 1;
 intnative_t rng_cnt = 0;
 
 #ifdef _OPENMP
@@ -128,7 +100,7 @@ static void rng_init(void)
 
 static intnative_t rng_gen_blk(uint32_t * buf, intnative_t len, int curr_tid)
 {
-    intnative_t gen_cnt = -1;//Error by default
+    intnative_t gen_cnt = -1;
     RNG_LOCK();
 
     if( rng_tid == curr_tid )
@@ -146,7 +118,7 @@ static intnative_t rng_gen_blk(uint32_t * buf, intnative_t len, int curr_tid)
         while( 0 != len-- )
         {
             seed=(seed*IA + IC)%IM;
-            *(buf++) = seed;//This is stupid actually!
+            *(buf++) = seed;
         }
     }
 
@@ -154,8 +126,8 @@ static intnative_t rng_gen_blk(uint32_t * buf, intnative_t len, int curr_tid)
     return gen_cnt;
 }
 
-int out_tid; //Thread ID
-int out_tnum = 1; //Thread number
+int out_tid;
+int out_tnum = 1;
 #ifdef _OPENMP
 omp_lock_t out_lock;
 #define OUT_LOCK_INIT() omp_init_lock(&out_lock)
@@ -175,7 +147,7 @@ static void out_init(void)
 
 static intnative_t out_write(char * buf, intnative_t len, int curr_tid)
 {
-    intnative_t wr_cnt = -1;//Error by default
+    intnative_t wr_cnt = -1;
     OUT_LOCK();
 
     if( out_tid == curr_tid )
@@ -188,7 +160,7 @@ static intnative_t out_write(char * buf, intnative_t len, int curr_tid)
     }
 
     OUT_FREE();
-    return wr_cnt; //-1 - thread error, 0 - IO error, 1 - ОК
+    return wr_cnt;
 }
 
 static void generate_And_Wrap_Pseudorandom_DNA_Sequence(
@@ -199,10 +171,11 @@ static void generate_And_Wrap_Pseudorandom_DNA_Sequence(
     uint32_t cumul_p[nucl_num];
     float cumul_acc=0.0;
 
-    for(intnative_t i=0; i<nucl_num; i++)
+    intnative_t i;
+    for(i=0; i<nucl_num; i++)
     {
         cumul_acc+=nucl_info[i].probability;
-        cumul_p[i]= 1ul+ (uint32_t)(cumul_acc*(float)IM); //Compensate rounding errors on test file
+        cumul_p[i]= 1ul+ (uint32_t)(cumul_acc*(float)IM);
     }
 
 #ifdef _OPENMP
@@ -238,7 +211,7 @@ static void generate_And_Wrap_Pseudorandom_DNA_Sequence(
 
             if( 0 == cnt )
             {
-                break;//Work finished!
+                break;
             }
 
             line = block;
@@ -263,19 +236,15 @@ static void generate_And_Wrap_Pseudorandom_DNA_Sequence(
                     *line++ = '\n';
                 }
             }
-            //Check if we need to end the line
             if( 0 != col )
             {
-                //Last iteration didn't end the line, so finish the job.
                 *line++ = '\n';
             }
-            //Print results
             do
             {
                 cnt = out_write(block, line - block, cur_tid);
             }
             while( -1 == cnt );
-            //Check  fot IO error
             if( 0  == cnt )
             {
                 exit(1);

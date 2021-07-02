@@ -1,8 +1,3 @@
-// The Computer Language Benchmarks Game
-// https://salsa.debian.org/benchmarksgame-team/benchmarksgame/
-//
-// contributed by Shakhno DV, Shakhno AV
-
 /*
 #include <math.h>
 #include <stdio.h>
@@ -31,14 +26,17 @@ void advance(int n)
     double dz;
     double R;
     double mag;
-    for (int k = 1; k <= n; ++k)
+    int k;
+    for (k = 1; k <= n; ++k)
     {
-        for (int i = 0; i < NBODIES; ++i)
+        int i;
+        for (i = 0; i < NBODIES; ++i)
         {
             x1 = x[i];
             y1 = y[i];
             z1 = z[i];
-            for (int j = i + 1; j < NBODIES; ++j)
+            int j;
+            for (j = i + 1; j < NBODIES; ++j)
             {
                 dx = x1 - x[j];
                 R = dx * dx;
@@ -57,7 +55,7 @@ void advance(int n)
             }
         }
 
-        for (int i = 0; i < NBODIES; ++i)
+        for (i = 0; i < NBODIES; ++i)
         {
             x[i] += DT * vx[i];
             y[i] += DT * vy[i];
@@ -69,10 +67,12 @@ void advance(int n)
 double energy()
 {
     double e = 0.0;
-    for (int i = 0; i < NBODIES; ++i)
+    int i;
+    for (i = 0; i < NBODIES; ++i)
     {
         e += 0.5 *mass[i] * (vx[i] * vx[i] + vy[i] * vy[i] + vz[i] * vz[i]);
-        for (int j = i + 1; j < NBODIES; ++j)
+        int j;
+        for (j = i + 1; j < NBODIES; ++j)
         {
             double dx = x[i] - x[j];
             double dy = y[i] - y[j];
@@ -87,7 +87,8 @@ double energy()
 void offset_momentum()
 {
     double px = 0.0, py = 0.0, pz = 0.0;
-    for (int i = 0; i < NBODIES; ++i)
+    int i;
+    for (i = 0; i < NBODIES; ++i)
     {
         px += vx[i] * mass[i];
         py += vy[i] * mass[i];

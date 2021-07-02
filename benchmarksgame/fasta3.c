@@ -64,7 +64,6 @@ static const double homosapiens_p[] = {
 
 #define LINELEN 60
 
-// slowest character-at-a-time output
 static void repeat_fasta(const char *seq,
 			 const int n) {
   const int len = strlen(seq);
