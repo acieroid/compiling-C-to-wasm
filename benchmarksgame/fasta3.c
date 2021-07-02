@@ -105,4 +105,5 @@ int main(int argc, char **argv) {
   
   printf(">THREE Homo sapiens frequency\n");
   random_fasta(homosapiens, homosapiens_p, n*5);
+  return 0;
 }
