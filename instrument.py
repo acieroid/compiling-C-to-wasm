@@ -13,6 +13,8 @@ class AssignmentVisitor(c_ast.NodeVisitor):
         s = ''
         if var in self.types and self.types[var] == 'string':
             s = '"\\nORBS:%s\\n"'
+        elif var in self.types and (self.types[var] == 'float' or self.types[var] == 'double'):
+            s = '"\\nORBS:%f\\n"'
         else:
             s = '"\\nORBS:%x\\n"'
         self.to_add.add(c_ast.FuncCall(c_ast.ID('printf'), c_ast.ExprList([c_ast.Constant(type='string', value=s), c_ast.ID(var)]), plyparser.Coord(file='', line=coord.line)))
@@ -31,6 +33,10 @@ class AssignmentVisitor(c_ast.NodeVisitor):
         if isinstance(node.type, c_ast.PtrDecl) and isinstance(node.type.type, c_ast.TypeDecl) and isinstance(node.type.type.type, c_ast.IdentifierType) and 'char' in node.type.type.type.names:
             # char*
             self.types[node.name] = 'string'
+        elif isinstance(node.type, c_ast.TypeDecl) and isinstance(node.type.type, c_ast.IdentifierType) and 'double' in node.type.type.names:
+            self.types[node.name] = 'double'
+        elif isinstance(node.type, c_ast.TypeDecl) and isinstance(node.type.type, c_ast.IdentifierType) and 'float' in node.type.type.names:
+            self.types[node.name] = 'float'
         # Other types are not stored in self.types, as we will simply print their hex value
     def visit_UnaryOp(self, node):
         if node.op == 'p++' or node.op == 'p--':
