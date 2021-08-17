@@ -2,6 +2,9 @@
 SRC=$@
 SYSROOT=$(pwd)/wasi
 ARGS="-O1 -lm"
+# orbs-wasm data uses
+# ARGS="-O1 -fno-inline-functions -lm"
+
 WASMARGS="$ARGS -Wl,--demangle -Wl,--export-all"
 # ARGS=-nostartfile -WL,--no-entry -WL,--export-all -WL,--import-memory
 
