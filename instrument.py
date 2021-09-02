@@ -124,6 +124,10 @@ if __name__ == "__main__":
         v = AssignmentVisitor()
         v.visit(ast)
         for to_add in v.to_add:
-            translate_to_c(filename, ast, to_add)
+            try:     #  indent offending example "parser_state_tos->paren_depth++;"
+                translate_to_c(filename, ast, to_add)
+            except:
+                print('OOPS %s_%s_%d_*.c tossed an exception' % (filename[:-2], to_add.args.exprs[1].name, to_add.coord.line))
+             
     else:
         print("Please provide a filename as argument")
